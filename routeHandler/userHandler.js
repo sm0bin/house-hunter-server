@@ -1,13 +1,13 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const router = express.Router();
 const User = require('../schemas/usersSchema');
 const jwt = require("jsonwebtoken");
 
 router.post('/signup', async (req, res) => {
-    const { fullName, role, phoneNumber, email, password } = req.body;
+    // const { fullName, role, phoneNumber, email, password } = req.body;
     try {
-        const user = await User.create({ fullName, role, phoneNumber, email, password });
+        const user = await User.create(req.body);
+        console.log(req.body);
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
         res.send({ token });
     } catch (err) {

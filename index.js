@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const app = express();
 const port = process.env.PORT || 5500;
 const cors = require('cors');
-require('dotenv').config()
+require('dotenv').config();
+
+const userHandler = require('./routeHandler/userHandler');
 
 
 // middleware
@@ -23,8 +25,10 @@ mongoose.connect(process.env.DB_URI)
 
 
 // routes
+
+app.use('/users', userHandler);
 app.use('/', (req, res) => {
-    res.send("Tourist Guide Server is running...");
+    res.send("House Hunter Server is running...");
 })
 
 
