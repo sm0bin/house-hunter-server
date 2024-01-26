@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../schemas/usersSchema');
 const jwt = require("jsonwebtoken");
+const verifyToken = require('../middlewares/verifyToken');
 
 router.post('/signup', async (req, res) => {
     // const { fullName, role, phoneNumber, email, password } = req.body;
@@ -16,7 +17,7 @@ router.post('/signup', async (req, res) => {
     }
 })
 
-router.post('/signin', async (req, res) => {
+router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password)
         return res.status(422).send({ message: "Email and password are required!" });
@@ -31,6 +32,23 @@ router.post('/signin', async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(422).send({ message: "Invalid email or password!" });
+    }
+})
+
+router.get('/me', verifyToken, async (req, res) => {
+    try {
+        // console.log("hitting");
+        // console.log(req.headers.authorization);
+        const token = req.headers.authorization.split(" ")[1];;
+        if (!token)
+            return res.status(401).send({ message: "You must be logged in!" });
+        const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+        // console.log(underToken);
+        const user = await User.findById(userId);
+        res.send(user);
+    } catch (err) {
+        console.log(err);
+        res.status(401).send({ message: "You must be logged in!" });
     }
 })
 
