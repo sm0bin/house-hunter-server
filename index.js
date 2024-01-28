@@ -6,6 +6,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const userHandler = require('./routeHandler/userHandler');
+const houseHandler = require('./routeHandler/houseHandler');
 
 
 // middleware
@@ -28,6 +29,7 @@ mongoose.connect(process.env.DB_URI)
 // routes
 
 app.use('/users', userHandler);
+app.use("/houses", houseHandler);
 app.use('/', (req, res) => {
     res.send("House Hunter Server is running...");
 })
