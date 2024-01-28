@@ -44,7 +44,7 @@ router.get('/me', verifyToken, async (req, res) => {
             return res.status(401).send({ message: "You must be logged in!" });
         const { userId } = jwt.verify(token, process.env.JWT_SECRET);
         // console.log(underToken);
-        const user = await User.findById(userId);
+        const user = await User.findById(userId).select("fullName role phoneNumber email");
         res.send(user);
     } catch (err) {
         console.log(err);
