@@ -6,8 +6,11 @@ const verifyToken = require('../middlewares/verifyToken');
 
 router.get('/', async (req, res) => {
     try {
-        const houses = await House.find();
-        res.send(houses);
+        const page = req.query.page ? req.query.page : 1;
+        const limit = req.query.limit ? req.query.limit : 6;
+        console.log(page, limit);
+        const houses = await House.find().limit(limit * 1).skip((page - 1) * limit);
+        res.send({ houses, totalPages: Math.ceil(houses.length / limit) });
     } catch (err) {
         console.log(err);
         res.status(404).send({ message: "Houses not found!" });
